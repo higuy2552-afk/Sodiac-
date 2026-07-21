@@ -2,309 +2,381 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>⟡ Luminarys High School — Student Form ⟡</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { overflow-x:hidden; background:#05000a; color:#e8d9ff; font-family:'Prompt',sans-serif; }
+  :root {
+    --neon-purple: #b46bff;
+    --neon-pink: #ff9ed8;
+    --deep-purple: #1a0033;
+    --bg-dark: #05000a;
+    --gold-amber: #ffb347;
+  }
 
-  /* ===== LOADING SCREEN ===== */
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body { 
+    overflow-x:hidden; 
+    background: var(--bg-dark); 
+    color:#e8d9ff; 
+    font-family:'Prompt',sans-serif; 
+  }
+
+  /* ===== LOADING SCREEN (Game Start Style) ===== */
   #loader {
     position:fixed; inset:0; z-index:9999;
-    background:radial-gradient(circle at center, #1a0033 0%, #05000a 70%);
+    background: radial-gradient(circle at center, #1a0033 0%, #000000 100%);
     display:flex; align-items:center; justify-content:center; flex-direction:column;
-    transition:opacity 1.2s ease, visibility 1.2s ease;
+    transition:opacity 1.5s ease, visibility 1.5s ease;
   }
-  #loader.hide { opacity:0; visibility:hidden; }
+  #loader.hide { opacity:0; visibility:hidden; pointer-events:none; }
+  
   .loader-title {
     font-family:'Cinzel',serif; font-weight:900;
-    font-size:clamp(2rem,6vw,4.5rem);
-    letter-spacing:.4em;
-    background:linear-gradient(90deg,#b46bff,#ffffff,#b46bff,#7a2bff);
+    font-size:clamp(2.5rem,8vw,5rem);
+    letter-spacing:.3em;
+    background:linear-gradient(90deg, #b46bff, #ffffff, #ff9ed8, #b46bff);
     background-size:300% 100%;
     -webkit-background-clip:text; background-clip:text;
     -webkit-text-fill-color:transparent;
     animation:shine 3s linear infinite, fadeInUp 1.5s ease;
+    filter: drop-shadow(0 0 20px rgba(180,107,255,0.8));
   }
   .loader-sub {
     margin-top:1rem; font-family:'Cormorant Garamond',serif; font-style:italic;
-    color:#c9a8ff; letter-spacing:.3em; font-size:1.1rem;
+    color:#c9a8ff; letter-spacing:.4em; font-size:1.2rem;
     opacity:0; animation:fadeInUp 1.5s ease .6s forwards;
+    text-shadow: 0 0 10px rgba(180,107,255,0.5);
   }
   .loader-bar {
-    margin-top:3rem; width:280px; height:2px; background:rgba(180,107,255,.15);
+    margin-top:3rem; width:300px; height:3px; background:rgba(180,107,255,0.2);
     position:relative; overflow:hidden; border-radius:2px;
     opacity:0; animation:fadeInUp 1.5s ease 1s forwards;
+    box-shadow: 0 0 15px rgba(180,107,255,0.3);
   }
   .loader-bar::after {
     content:''; position:absolute; inset:0;
     background:linear-gradient(90deg,transparent,#d98bff,#ffffff,#d98bff,transparent);
-    animation:loadBar 2.4s ease-in-out forwards;
-  }
-  .loader-sigil {
-    position:absolute; width:100%; height:100%; pointer-events:none;
-    background:
-      radial-gradient(circle at 20% 30%, rgba(180,107,255,.15) 0%, transparent 40%),
-      radial-gradient(circle at 80% 70%, rgba(122,43,255,.15) 0%, transparent 40%);
-    animation:pulse 4s ease-in-out infinite;
+    animation:loadBar 2.5s ease-in-out forwards;
+    box-shadow: 0 0 20px #d98bff;
   }
   @keyframes shine { to { background-position:300% 0; } }
-  @keyframes fadeInUp { from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);} }
+  @keyframes fadeInUp { from{opacity:0; transform:translateY(30px);} to{opacity:1; transform:translateY(0);} }
   @keyframes loadBar { 0%{transform:translateX(-100%);} 100%{transform:translateX(0);} }
-  @keyframes pulse { 0%,100%{opacity:.6;} 50%{opacity:1;} }
 
-  /* ===== BACKGROUND ===== */
+  /* ===== ANIMATED BACKGROUND ===== */
+  .bg-aurora {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background: 
+      radial-gradient(ellipse at 20% 30%, rgba(180,107,255,0.15) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 70%, rgba(255,158,216,0.1) 0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(90,20,180,0.1) 0%, transparent 60%);
+    animation: auroraShift 20s ease-in-out infinite alternate;
+  }
+  @keyframes auroraShift { 
+    0% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+    100% { transform: scale(1.1) rotate(3deg); opacity: 1; } 
+  }
+
   .bg-stars { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
   .star {
     position:absolute; width:2px; height:2px; background:#fff; border-radius:50%;
-    box-shadow:0 0 6px #d98bff, 0 0 12px #b46bff;
-    animation:twinkle 3s infinite;
+    box-shadow:0 0 8px #d98bff, 0 0 15px #b46bff;
+    animation:twinkle 4s infinite;
   }
-  @keyframes twinkle { 0%,100%{opacity:.3; transform:scale(1);} 50%{opacity:1; transform:scale(1.4);} }
+  @keyframes twinkle { 0%,100%{opacity:0.2; transform:scale(1);} 50%{opacity:1; transform:scale(1.5);} }
 
-  .bg-glow {
-    position:fixed; inset:0; z-index:0; pointer-events:none;
-    background:
-      radial-gradient(ellipse at 15% 20%, rgba(180,107,255,.18) 0%, transparent 50%),
-      radial-gradient(ellipse at 85% 80%, rgba(122,43,255,.18) 0%, transparent 50%),
-      radial-gradient(ellipse at 50% 50%, rgba(90,20,180,.08) 0%, transparent 70%);
-    animation:bgShift 15s ease-in-out infinite;
-  }
-  @keyframes bgShift { 0%,100%{transform:scale(1) rotate(0);} 50%{transform:scale(1.1) rotate(2deg);} }
-
-  /* ===== MUSIC CONTROL ===== */
-  .music-control {
-    position:fixed; top:20px; right:20px; z-index:1000;
-    background:rgba(180,107,255,.15);
-    border:1px solid rgba(180,107,255,.4);
-    border-radius:50%; width:50px; height:50px;
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer; backdrop-filter:blur(10px);
-    transition:all .3s ease;
-    box-shadow:0 0 20px rgba(180,107,255,.3);
-  }
-  .music-control:hover {
-    transform:scale(1.1);
-    box-shadow:0 0 30px rgba(217,139,255,.5);
-    background:rgba(180,107,255,.25);
-  }
-  .music-control.playing { animation:musicPulse 2s ease-in-out infinite; }
-  @keyframes musicPulse {
-    0%,100% { box-shadow:0 0 20px rgba(180,107,255,.3); }
-    50% { box-shadow:0 0 40px rgba(217,139,255,.6); }
-  }
-  .music-icon { font-size:1.5rem; color:#d98bff; text-shadow:0 0 10px #b46bff; }
-
-  /* ===== MAIN ===== */
+  /* ===== MAIN CONTAINER ===== */
   .container {
     position:relative; z-index:2;
-    max-width:900px; margin:0 auto; padding:4rem 1.5rem 6rem;
-    opacity:0; animation:fadeInUp 1.5s ease 3.2s forwards;
+    max-width:1000px; margin:0 auto; padding:4rem 1.5rem 6rem;
+    opacity:0; animation:fadeInUp 1.5s ease 3s forwards;
   }
 
-  .header { text-align:center; margin-bottom:3rem; position:relative; }
-  .header::before, .header::after {
-    content:'✦'; position:absolute; top:50%; color:#b46bff;
-    font-size:1.2rem; text-shadow:0 0 15px #b46bff;
-    animation:pulse 2s ease-in-out infinite;
-  }
-  .header::before { left:0; }
-  .header::after { right:0; }
+  /* ===== HEADER ===== */
+  .header { text-align:center; margin-bottom:4rem; position:relative; }
   .header h1 {
     font-family:'Cinzel',serif; font-weight:900;
-    font-size:clamp(1.8rem,5vw,3rem); letter-spacing:.25em;
-    background:linear-gradient(180deg,#fff 0%,#d98bff 50%,#7a2bff 100%);
+    font-size:clamp(2rem,6vw,3.5rem); letter-spacing:.2em;
+    background:linear-gradient(180deg,#fff 0%,#d98bff 40%,#7a2bff 100%);
     -webkit-background-clip:text; background-clip:text;
     -webkit-text-fill-color:transparent;
+    filter: drop-shadow(0 0 15px rgba(217,139,255,0.6));
+    margin-bottom: 0.5rem;
   }
   .header .tagline {
-    margin-top:.8rem; font-family:'Cormorant Garamond',serif; font-style:italic;
-    color:#c9a8ff; letter-spacing:.2em; font-size:1rem;
+    font-family:'Cormorant Garamond',serif; font-style:italic;
+    color:#c9a8ff; letter-spacing:.3em; font-size:1.1rem;
+    text-shadow: 0 0 10px rgba(180,107,255,0.4);
   }
+
+  /* ===== EPIC DIVIDER ===== */
   .divider {
     display:flex; align-items:center; justify-content:center;
-    margin:2.5rem 0; gap:1rem;
+    margin:3rem 0; gap:1rem;
   }
-  .divider .line { flex:1; height:1px; background:linear-gradient(90deg,transparent,#b46bff,transparent); }
-  .divider .sigil { color:#d98bff; font-size:1.5rem; text-shadow:0 0 15px #b46bff; animation:rotate 8s linear infinite; }
+  .divider .line { 
+    flex:1; height:1px; 
+    background:linear-gradient(90deg,transparent, #b46bff, #ff9ed8, #b46bff, transparent); 
+    box-shadow: 0 0 10px rgba(180,107,255,0.5);
+  }
+  .divider .sigil { 
+    color:#ff9ed8; font-size:1.8rem; 
+    text-shadow:0 0 20px #b46bff, 0 0 40px #b46bff; 
+    animation:rotate 10s linear infinite, pulse 3s ease-in-out infinite; 
+  }
   @keyframes rotate { to { transform:rotate(360deg); } }
+  @keyframes pulse { 0%,100%{opacity:0.8; transform: scale(1);} 50%{opacity:1; transform: scale(1.1);} }
 
-  /* ===== CHARACTER IMAGE SECTION (ปรับปรุง: สว่างขึ้น + ไม่ตัด) ===== */
+  /* ===== CHARACTER IMAGE SHOWCASE (Large, Proportional, Game-like) ===== */
   .character-showcase {
-    display:grid; grid-template-columns: repeat(3, 1fr);
-    gap:1.5rem; margin:2rem 0 3rem;
+    display:flex; flex-direction:column; gap:2rem; margin:3rem 0 4rem;
   }
   .char-img-container {
     position:relative;
-    border-radius:15px;
-    border:2px solid rgba(180,107,255,.35);
-    box-shadow:0 0 30px rgba(122,43,255,.25);
-    transition:all .5s ease;
-    background: rgba(20, 5, 40, 0.4); /* พื้นหลังรองกรณีภาพโปร่งใส */
-    overflow: visible; /* ป้องกันการตัดขอบ */
-  }
-  .char-img-container:hover {
-    transform:translateY(-6px);
-    box-shadow:0 0 50px rgba(180,107,255,.45);
-    border-color:rgba(217,139,255,.7);
-  }
-  .char-img-container img {
-    width: 100%;
-    height: auto; /* แสดงความสูงตามสัดส่วนจริง ไม่ตัดภาพ */
-    display: block;
-    border-radius: 13px;
-    filter: brightness(1.15) contrast(1.05); /* ปรับให้ภาพสว่างและสีสดขึ้น */
-    transition: filter .5s ease, transform .5s ease;
-  }
-  .char-img-container:hover img {
-    filter: brightness(1.25) contrast(1.1); /* สว่างขึ้นอีกเมื่อ Hover */
-    transform: scale(1.02);
-  }
-  /* แสงคลุมทับแบบจางๆ แทนที่จะเป็นสีดำทึบ */
-  .char-img-container::before {
-    content:''; position:absolute; inset:0;
-    background: linear-gradient(180deg, transparent 0%, rgba(180,107,255,0.08) 100%);
-    z-index:1; pointer-events:none; border-radius:15px;
+    border-radius:16px;
+    overflow: visible;
+    margin: 0 auto;
+    transition:all .6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
   
-  /* รูปหลักให้กินพื้นที่เต็มความกว้าง */
-  .char-img-container.main {
-    grid-column: span 3;
+  /* กรอบเรืองรองแบบเกม RPG */
+  .char-img-container::before {
+    content:''; position:absolute; inset:-3px;
+    background:linear-gradient(45deg, #b46bff, #ff9ed8, #7a2bff, #b46bff);
+    background-size:400% 400%;
+    border-radius:18px; z-index:-1;
+    animation: borderGlow 6s ease infinite;
+    box-shadow: 0 0 30px rgba(180,107,255,0.4), inset 0 0 20px rgba(180,107,255,0.2);
+  }
+  @keyframes borderGlow { 
+    0%{background-position:0% 50%;} 50%{background-position:100% 50%;} 100%{background-position:0% 50%;} 
   }
 
-  /* ===== SECTION ===== */
+  .char-img-container img {
+    width: 100%;
+    height: auto; /* สมส่วน ไม่ตัดภาพ */
+    display: block;
+    border-radius: 14px;
+    filter: brightness(1.1) contrast(1.05) saturate(1.1);
+    transition: filter .5s ease, transform .5s ease;
+  }
+  
+  /* รูปหลัก: ใหญ่เต็มสายตา มีเอฟเฟกต์ลอยตัว */
+  .char-img-container.main {
+    max-width: 800px;
+    width: 100%;
+    animation: float 6s ease-in-out infinite;
+  }
+  .char-img-container.main:hover {
+    transform: translateY(-10px) scale(1.01);
+    filter: drop-shadow(0 20px 40px rgba(180,107,255,0.4));
+  }
+  .char-img-container.main:hover img {
+    filter: brightness(1.2) contrast(1.1) saturate(1.2);
+  }
+
+  /* รูปย่อย: วางคู่กัน สมส่วน */
+  .sub-images {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .char-img-container.sub {
+    width: 100%;
+  }
+  .char-img-container.sub:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px rgba(180,107,255,0.3);
+  }
+  .char-img-container.sub:hover img {
+    filter: brightness(1.2) contrast(1.1);
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* ===== INFO SECTIONS (Game UI Panel Style) ===== */
   .section {
     position:relative;
-    background:linear-gradient(145deg, rgba(30,5,60,.55), rgba(10,0,25,.75));
-    border:1px solid rgba(180,107,255,.25);
-    border-radius:18px;
-    padding:2.5rem 2rem;
+    background:linear-gradient(160deg, rgba(26,0,51,0.6), rgba(10,0,20,0.8));
+    border: 1px solid rgba(180,107,255,0.3);
+    border-radius:12px;
+    padding:2.5rem;
     margin-bottom:2.5rem;
-    backdrop-filter:blur(10px);
-    box-shadow: 0 0 30px rgba(122,43,255,.15), inset 0 0 30px rgba(180,107,255,.05);
-    transition:transform .5s ease, box-shadow .5s ease;
+    backdrop-filter:blur(12px);
+    box-shadow: 0 0 30px rgba(122,43,255,0.15), inset 0 0 40px rgba(180,107,255,0.05);
+    transition:transform .4s ease, box-shadow .4s ease;
     overflow:hidden;
   }
-  .section::before {
-    content:''; position:absolute; top:0; left:-100%; width:100%; height:100%;
-    background:linear-gradient(90deg,transparent,rgba(217,139,255,.08),transparent);
-    transition:left .8s ease;
+  /* มุมกรอบแบบเกม */
+  .section::after, .section::before {
+    content:''; position:absolute; width:20px; height:20px;
+    border: 2px solid #ff9ed8;
+    transition: all 0.4s ease;
   }
-  .section:hover { transform:translateY(-4px); box-shadow:0 0 50px rgba(180,107,255,.3); }
-  .section:hover::before { left:100%; }
+  .section::before { top:-1px; left:-1px; border-right:none; border-bottom:none; border-radius: 12px 0 0 0; }
+  .section::after { bottom:-1px; right:-1px; border-left:none; border-top:none; border-radius: 0 0 12px 0; }
+  
+  .section:hover { 
+    transform:translateY(-5px); 
+    box-shadow:0 0 50px rgba(180,107,255,0.3), inset 0 0 50px rgba(180,107,255,0.1); 
+    border-color: rgba(255,158,216,0.5);
+  }
+  .section:hover::before, .section:hover::after {
+    width: 30px; height: 30px;
+    box-shadow: 0 0 15px #ff9ed8;
+  }
 
   .section-title {
-    font-family:'Cinzel',serif; font-weight:600;
-    font-size:1.4rem; letter-spacing:.2em;
+    font-family:'Cinzel',serif; font-weight:700;
+    font-size:1.5rem; letter-spacing:.15em;
     color:#fff; margin-bottom:1.5rem;
-    display:flex; align-items:center; gap:.8rem;
-    text-shadow:0 0 15px rgba(180,107,255,.6);
+    display:flex; align-items:center; gap:1rem;
+    text-shadow:0 0 15px rgba(180,107,255,0.8);
+    border-bottom: 1px solid rgba(180,107,255,0.2);
+    padding-bottom: 0.8rem;
   }
   .section-title::before {
-    content:'✦'; color:#d98bff; font-size:1.2rem;
+    content:'✦'; color:#ff9ed8; font-size:1.4rem;
     animation:pulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px #ff9ed8);
   }
 
   .row {
-    display:grid; grid-template-columns: 180px 1fr;
-    gap:1rem; padding:.7rem 0;
-    border-bottom:1px dashed rgba(180,107,255,.12);
-    transition:background .3s ease;
+    display:grid; grid-template-columns: 200px 1fr;
+    gap:1rem; padding:1rem 0;
+    border-bottom:1px dashed rgba(180,107,255,0.15);
+    transition:background .3s ease, padding-left .3s ease;
   }
   .row:last-child { border-bottom:none; }
-  .row:hover { background:rgba(180,107,255,.05); }
+  .row:hover { 
+    background:rgba(180,107,255,0.08); 
+    padding-left: 10px;
+    border-radius: 8px;
+  }
   .row .label {
-    font-family:'Cormorant Garamond',serif; font-weight:600;
-    color:#c9a8ff; letter-spacing:.1em; font-size:1.05rem;
+    font-family:'Cormorant Garamond',serif; font-weight:700;
+    color:#d98bff; letter-spacing:.1em; font-size:1.1rem;
+    display: flex; align-items: center;
   }
-  .row .value { color:#f0e6ff; font-weight:300; line-height:1.6; }
+  .row .value { 
+    color:#f0e6ff; font-weight:400; line-height:1.7; font-size: 1.05rem;
+    text-shadow: 0 0 5px rgba(255,255,255,0.1);
+  }
   .locked {
-    display:inline-flex; align-items:center; gap:.4rem;
-    color:#7a5a99; font-style:italic; font-size:.95rem;
+    display:inline-flex; align-items:center; gap:.5rem;
+    color:#8a6fb3; font-style:italic; font-size:1rem;
+    background: rgba(138, 111, 179, 0.1);
+    padding: 4px 12px; border-radius: 20px;
+    border: 1px solid rgba(138, 111, 179, 0.3);
   }
-  .locked::before { content:'🔒'; font-size:.9rem; }
+  .locked::before { content:'🔒'; font-size:.9rem; filter: grayscale(1); }
 
-  .power-list { list-style:none; padding-left:1.2rem; }
+  .power-list { list-style:none; padding-left:0.5rem; }
   .power-list li {
-    position:relative; padding:.4rem 0 .4rem 1.2rem;
-    color:#e8d9ff; line-height:1.7;
+    position:relative; padding:.6rem 0 .6rem 1.5rem;
+    color:#e8d9ff; line-height:1.8; font-size: 1.05rem;
   }
   .power-list li::before {
-    content:'✧'; position:absolute; left:0; top:.4rem;
-    color:#d98bff; text-shadow:0 0 8px #b46bff;
+    content:'▹'; position:absolute; left:0; top:.6rem;
+    color:#ff9ed8; font-size:1.2rem; text-shadow:0 0 8px #ff9ed8;
   }
 
+  .highlight-text {
+    color: #ff9ed8; font-weight: 600;
+    text-shadow: 0 0 10px rgba(255,158,216,0.4);
+  }
+  .danger-text {
+    color: #ff6b6b; font-weight: 600;
+    text-shadow: 0 0 10px rgba(255,107,107,0.4);
+  }
+
+  /* ===== QUOTE ===== */
   .quote {
     text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic;
-    font-size:1.3rem; color:#d98bff; line-height:1.8;
-    padding:2rem 1rem; position:relative;
-    text-shadow:0 0 15px rgba(217,139,255,.4);
+    font-size:clamp(1.3rem, 3vw, 1.8rem); color:#fff; line-height:1.8;
+    padding:3rem 1rem; position:relative; margin: 3rem 0;
+    text-shadow:0 0 20px rgba(217,139,255,0.6);
+    background: linear-gradient(180deg, transparent, rgba(180,107,255,0.1), transparent);
+    border-top: 1px solid rgba(180,107,255,0.2);
+    border-bottom: 1px solid rgba(180,107,255,0.2);
   }
   .quote::before, .quote::after {
-    content:'❝'; font-size:3rem; color:#b46bff; opacity:.4;
-    position:absolute; font-family:serif;
+    content:'❝'; font-size:4rem; color:#b46bff; opacity:0.3;
+    position:absolute; font-family:serif; line-height: 1;
   }
-  .quote::before { top:-.5rem; left:1rem; }
-  .quote::after { content:'❞'; bottom:-1.5rem; right:1rem; }
+  .quote::before { top:1rem; left:2rem; }
+  .quote::after { content:'❞'; bottom:0rem; right:2rem; }
 
+  /* ===== FOOTER ===== */
   .footer {
-    text-align:center; margin-top:3rem;
+    text-align:center; margin-top:4rem;
     font-family:'Cormorant Garamond',serif; font-style:italic;
-    color:#8a6fb3; letter-spacing:.2em; font-size:.95rem;
+    color:#8a6fb3; letter-spacing:.2em; font-size:1rem;
+    line-height: 1.8;
   }
   .footer .sigils { 
-    font-size:1.5rem; color:#b46bff; margin-bottom:1rem; letter-spacing:.5em;
-    text-shadow:0 0 15px #b46bff; animation:pulse 3s ease-in-out infinite; 
+    font-size:2rem; color:#b46bff; margin-bottom:1.5rem; letter-spacing:.8em;
+    text-shadow:0 0 20px #b46bff; animation:pulse 3s ease-in-out infinite; 
   }
 
+  /* ===== RESPONSIVE ===== */
   @media (max-width:768px){
-    .row { grid-template-columns:1fr; gap:.3rem; }
+    .row { grid-template-columns:1fr; gap:0.5rem; padding: 0.8rem; }
+    .row .label { font-size: 1rem; }
     .section { padding:1.8rem 1.2rem; }
-    .character-showcase { grid-template-columns:1fr; }
-    .char-img-container.main { grid-column: span 1; }
-    .music-control { top:10px; right:10px; width:45px; height:45px; }
+    .sub-images { grid-template-columns: 1fr; gap: 1.5rem; }
+    .quote::before { left: 0.5rem; font-size: 3rem; }
+    .quote::after { right: 0.5rem; }
   }
 </style>
 </head>
 <body>
 
-<audio id="bgMusic" loop>
-  <source src="https://drive.google.com/uc?export=download&id=1mUKhJhSnfCPvthJ7fKNPo1P3wOH6uwl5" type="audio/mpeg">
-</audio>
-
-<div class="music-control" id="musicBtn" onclick="toggleMusic()">
-  <span class="music-icon" id="musicIcon">🎵</span>
-</div>
-
+<!-- LOADING SCREEN -->
 <div id="loader">
-  <div class="loader-sigil"></div>
   <div class="loader-title">LUMINARYS</div>
   <div class="loader-sub">— High School —</div>
   <div class="loader-bar"></div>
 </div>
 
-<div class="bg-glow"></div>
+<!-- BACKGROUNDS -->
+<div class="bg-aurora"></div>
 <div class="bg-stars" id="stars"></div>
 
+<!-- MAIN CONTENT -->
 <div class="container">
 
   <div class="header">
     <h1>⟡ แบบฟอร์มนักเรียน ⟡</h1>
-    <div class="tagline">Student Profile — Luminarys High School</div></div>
+    <div class="tagline">Student Profile — Luminarys High School</div>
+  </div>
 
-  <!-- CHARACTER IMAGES SHOWCASE (แสดงครบไม่ตัด + สว่าง) -->
+  <!-- CHARACTER IMAGES (Large, Proportional, No Crop) -->
   <div class="character-showcase">
     <div class="char-img-container main">
       <img src="https://i.postimg.cc/xC4KgQrJ/mi-m-ch-x-189-20260721124359.jpg" alt="Character Main">
     </div>
-    <div class="char-img-container">
-      <img src="https://i.postimg.cc/XJzwxWMB/mi-m-ch-x-189-20260721124443.jpg" alt="Character Detail 1">
-    </div>
-    <div class="char-img-container">
-      <img src="https://i.postimg.cc/KzHnQbXM/mi-m-ch-x-262-20260721121956.png" alt="Character Detail 2">
+    <div class="sub-images">
+      <div class="char-img-container sub">
+        <img src="https://i.postimg.cc/XJzwxWMB/mi-m-ch-x-189-20260721124443.jpg" alt="Character Detail 1">
+      </div>
+      <div class="char-img-container sub">
+        <img src="https://i.postimg.cc/KzHnQbXM/mi-m-ch-x-262-20260721121956.png" alt="Character Detail 2">
+      </div>
     </div>
   </div>
 
+  <div class="divider"><div class="line"></div><div class="sigil">✦</div><div class="line"></div></div>
+
+  <!-- ส่วนที่ 1: ข้อมูลส่วนตัว -->
   <div class="section">
     <div class="section-title">ข้อมูลส่วนตัว</div>
     <div class="row"><div class="label">✧ ชื่อ – นามสกุล</div><div class="value">เเอลิส โซเดียส</div></div>
@@ -314,8 +386,7 @@
     <div class="row"><div class="label">✧ สัญชาติ</div><div class="value">กรีก</div></div>
   </div>
 
-  <div class="divider"><div class="line"></div><div class="sigil">✦</div><div class="line"></div></div>
-
+  <!-- ส่วนที่ 2: รูปลักษณ์ -->
   <div class="section">
     <div class="section-title">รูปลักษณ์ภายนอก</div>
     <div class="row"><div class="label">✧ ส่วนสูง</div><div class="value">200 ซม.</div></div>
@@ -328,11 +399,12 @@
 
   <div class="divider"><div class="line"></div><div class="sigil">✦</div><div class="line"></div></div>
 
+  <!-- ส่วนที่ 3: สกิล -->
   <div class="section">
     <div class="section-title">สกิลติดตัว & พลัง</div>
     <ul class="power-list">
       <li>เป็นโครงเทพแห่งสงคราม (อิง) — เน้นความรุนแรง การนองเลือด ความโหดเหี้ยม และสัญชาตญาณดิบในการต่อสู้<br>
-        <span style="color:#c9a8ff; font-size:.95rem;">(สู้ด้วยสัญชาตญาณ มือ เท้า ปาก พลังไม่ค่อยใช้)</span></li>
+        <span style="color:#c9a8ff; font-size:.95rem; opacity:0.9;">(สู้ด้วยสัญชาตญาณ มือ เท้า ปาก พลังไม่ค่อยใช้)</span></li>
       <li>ฟื้นฟูตัวเองไว</li>
       <li>เน้นอาวุธที่ดึงออกมาจากกาย</li>
     </ul>
@@ -340,23 +412,25 @@
 
   <div class="divider"><div class="line"></div><div class="sigil">✦</div><div class="line"></div></div>
 
+  <!-- ส่วนที่ 4: ข้อจำกัด -->
   <div class="section">
     <div class="section-title">ข้อเสีย / ข้อจำกัด</div>
     <ul class="power-list">
-      <li>เมื่อใช้สัญชาตญาณเยอะเกินขีดจำกัด หัวใจจะสั่นพร่าลวน (ต่อสู้ราว <b style="color:#d98bff">7 ชม.</b>) เกิดการฉีกขาดตามกล้ามเนื้อ ทำให้ต้องอยู่นิ่งประมาณ <b style="color:#d98bff">1 ชม.</b> เพื่อฟื้นฟู</li>
-      <li>ประเภทเกิดการกระหายการต่อสู้และความเจ็บปวด — เมื่อสู้ต่อๆ ไปเรื่อยๆ จะแสดงอาการปวดร้าวหลังดึงอาวุธออกจากร่างกาย → <b style="color:#ff9ed8">เสียพลังชีวิต</b></li>
+      <li>เมื่อใช้สัญชาตญาณเยอะเกินขีดจำกัด หัวใจจะสั่นพร่าลวน (ต่อสู้ราว <span class="highlight-text">7 ชม.</span>) เกิดการฉีกขาดตามกล้ามเนื้อ ทำให้ต้องอยู่นิ่งประมาณ <span class="highlight-text">1 ชม.</span> เพื่อฟื้นฟู</li>
+      <li>ประเภทเกิดการกระหายการต่อสู้และความเจ็บปวด — เมื่อสู้ต่อๆ ไปเรื่อยๆ จะแสดงอาการปวดร้าวหลังดึงอาวุธออกจากร่างกาย → <span class="danger-text">เสียพลังชีวิต</span></li>
     </ul>
-    <div style="margin-top:1.5rem;">
-      <div class="label" style="color:#c9a8ff; font-family:'Cormorant Garamond',serif; font-weight:600; letter-spacing:.1em;">✧ ความสามารถพิเศษ</div>
-      <div class="value" style="margin-top:.4rem;">ตัวเบาพริ้วเวลาต่อสู้</div>
+    <div style="margin-top:1.5rem; padding: 1rem; background: rgba(180,107,255,0.05); border-radius: 8px; border-left: 3px solid #ff9ed8;">
+      <div class="label" style="color:#ff9ed8; font-family:'Cormorant Garamond',serif; font-weight:700; letter-spacing:.1em; font-size:1.1rem;">✧ ความสามารถพิเศษ</div>
+      <div class="value" style="margin-top:.5rem;">ตัวเบาพริ้วเวลาต่อสู้</div>
     </div>
   </div>
 
   <div class="divider"><div class="line"></div><div class="sigil">✦</div><div class="line"></div></div>
 
+  <!-- ส่วนที่ 5: ครอบครัว / เผ่า -->
   <div class="section">
     <div class="section-title">สถานะ · เผ่า · บุคลิก</div>
-    <div class="row"><div class="label">✧ สถานะครอบครัว</div><div class="value">ลูกคนเดียว — ตอนนี้ทุกคนตาย เหลือเขาไว้สืบทอดหลังตื่นรู้ขั้นลึก → <b style="color:#d98bff">20%</b> (ตอนนี้เขามีแค่ราวๆ <b style="color:#ff9ed8">9%</b>)</div></div>
+    <div class="row"><div class="label">✧ สถานะครอบครัว</div><div class="value">ลูกคนเดียว — ตอนนี้ทุกคนตาย เหลือเขาไว้สืบทอดหลังตื่นรู้ขั้นลึก → <span class="highlight-text">20%</span> (ตอนนี้เขามีแค่ราวๆ <span class="danger-text">9%</span>)</div></div>
     <div class="row"><div class="label">✧ เผ่า</div><div class="value">จันทร์แดง (เทพสงคราม)</div></div>
     <div class="row"><div class="label">✧ บุคลิกนิสัย</div><div class="value">ไม่แน่ชัด แต่ไม่ค่อยหยิ่ง บางทีก็สามารถเลียแทบเท้าคนอื่นได้ เพื่อแลกกับการสู้ดุเดือด</div></div>
     <div class="row"><div class="label">✧ ประวัติโดยย่อ</div><div class="value"><span class="locked">ไม่มี</span></div></div>
@@ -364,6 +438,7 @@
 
   <div class="divider"><div class="line"></div><div class="sigil">✦</div><div class="line"></div></div>
 
+  <!-- ส่วนที่ 6: บทบาท -->
   <div class="section">
     <div class="section-title">ชมรม & บทบาท</div>
     <div class="row"><div class="label">✧ ชมรม</div><div class="value">ศิลปะการต่อสู้</div></div>
@@ -372,74 +447,41 @@
 
   <div class="divider"><div class="line"></div><div class="sigil">✦✦✦</div><div class="line"></div></div>
 
+  <!-- คำกล่าวต้อนรับ -->
   <div class="quote">
     ยินดีต้อนรับเข้าสู่นรก<br>
-    ของ <b style="letter-spacing:.15em;">Luminarys High School</b>
+    ของ <span style="font-family:'Cinzel',serif; font-weight:700; letter-spacing:.15em; color:#ff9ed8; text-shadow:0 0 20px rgba(255,158,216,0.6);">Luminarys High School</span>
   </div>
 
   <div class="footer">
     <div class="sigils">✧ ✦ ✧</div>
     หากสิ่งใดออเจ้ามิต้องการเผยแพร่หรือบอก<br>
     ก็ให้ล็อคไว้เสียเถิด<br>
-    หรือออเจ้าก็บอกว่า <i style="color:#d98bff;">ไม่มี</i>
+    หรือออเจ้าก็บอกว่า <span style="color:#ff9ed8; font-weight:600;">ไม่มี</span>
   </div>
 
 </div>
 
 <script>
+  // สร้างดาวพื้นหลังแบบสุ่ม
   const starBox = document.getElementById('stars');
-  for (let i=0; i<80; i++){
+  for (let i = 0; i < 100; i++) {
     const s = document.createElement('div');
     s.className = 'star';
-    s.style.left = Math.random()*100 + '%';
-    s.style.top = Math.random()*100 + '%';
-    s.style.animationDelay = Math.random()*3 + 's';
-    s.style.transform = `scale(${Math.random()*1.5 + .5})`;
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = Math.random() * 4 + 's';
+    s.style.animationDuration = (Math.random() * 3 + 3) + 's';
+    s.style.transform = `scale(${Math.random() * 1.5 + 0.5})`;
     starBox.appendChild(s);
   }
 
-  const music = document.getElementById('bgMusic');
-  const musicBtn = document.getElementById('musicBtn');
-  const musicIcon = document.getElementById('musicIcon');
-  let isPlaying = false;
-
-  function toggleMusic() {
-    if (isPlaying) {
-      music.pause();
-      musicBtn.classList.remove('playing');
-      musicIcon.textContent = '🎵';
-    } else {
-      music.play();
-      musicBtn.classList.add('playing');
-      musicIcon.textContent = '🔇';
-    }
-    isPlaying = !isPlaying;
-  }
-
+  // ซ่อนหน้าโหลดเมื่อโหลดเสร็จ
   window.addEventListener('load', () => {
     setTimeout(() => {
       document.getElementById('loader').classList.add('hide');
-      music.volume = 0.6;
-      music.play().then(() => {
-        isPlaying = true;
-        musicBtn.classList.add('playing');
-        musicIcon.textContent = '🔇';
-      }).catch(() => {
-        musicBtn.style.animation = 'pulse 1s ease-in-out 3';
-      });
-    }, 3000);
+    }, 2800);
   });
-
-  document.addEventListener('click', function initAudio() {
-    if (!isPlaying && music.paused) {
-      music.play().then(() => {
-        isPlaying = true;
-        musicBtn.classList.add('playing');
-        musicIcon.textContent = '🔇';
-      }).catch(e => console.log('Audio play failed'));
-    }
-    document.removeEventListener('click', initAudio);
-  }, { once: true });
 </script>
 </body>
 </html>
